@@ -20,7 +20,7 @@ export const fetchOneGame = (id) => {
 		try {
 			dispatch(gameSlice.actions.fetching());
 
-			const url = `/api/game?id=${id}`;
+			const url = `https://www.freetogame.com/api/game?id=${id}`;
 
 			const response = await axios.get(url);
 

@@ -16,7 +16,7 @@ export const fetchGames = (platform = null, category = null, sortBy = null) => {
 
 			const params = { ...(platform && { platform }), ...(category && { category }), ...(sortBy && { 'sort-by': sortBy }) };
 
-			const url = `/api/games?${queryString.stringify(params)}`;
+			const url = `https://www.freetogame.com/api/games?${queryString.stringify(params)}`;
 
 			console.log(url);
 
