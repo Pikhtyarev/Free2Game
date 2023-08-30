@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
 	loading: false,
 	error: '',
-	games: []
+	games: [],
+	cachedGames: []
 };
 
 export const gameSlice = createSlice({
@@ -12,14 +13,22 @@ export const gameSlice = createSlice({
 	reducers: {
 		fetching(state) {
 			state.loading = true;
+			state.error = '';
 		},
-		fetchSuccess(state, action) {
+		fetchGameSuccess(state, action) {
+			state.loading = false;
+			state.game = action.payload;
+			state.error = '';
+		},
+		fetchGamesSuccess(state, action) {
 			state.loading = false;
 			state.games = action.payload;
+			state.cachedGames = action.payload;
+			state.error = '';
 		},
 		fetchError(state, action) {
 			state.loading = false;
-			state.error = action.payload.message;
+			state.error = `Failed to get data. Error: ${action.payload.message}`;
 		}
 	}
 });
