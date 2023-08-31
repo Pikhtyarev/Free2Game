@@ -7,62 +7,62 @@ import FormControl from '@mui/material/FormControl';
 import { InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { generateQueryString } from '../../utils/queryString';
 
+const categoriesArray = [
+	'mmorpg',
+	'shooter',
+	'strategy',
+	'moba',
+	'racing',
+	'sports',
+	'social',
+	'sandbox',
+	'open-world',
+	'survival',
+	'pvp',
+	'pve',
+	'pixel',
+	'voxel',
+	'zombie',
+	'turn-based',
+	'first-person',
+	'third-Person',
+	'top-down',
+	'tank',
+	'space',
+	'sailing',
+	'side-scroller',
+	'superhero',
+	'permadeath',
+	'card',
+	'battle-royale',
+	'mmo',
+	'mmofps',
+	'mmotps',
+	'3d',
+	'2d',
+	'anime',
+	'fantasy',
+	'sci-fi',
+	'fighting',
+	'action-rpg',
+	'action',
+	'military',
+	'martial-arts',
+	'flight',
+	'low-spec',
+	'tower-defense',
+	'horror',
+	'mmorts'
+];
+
+const sortArray = ['relevance', 'popularity', 'alphabetical', 'release-date'];
+
 export const SelectFilter = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [category, setCategory] = useState('');
 	const [sortBy, setSortBy] = useState('');
 	const [platform, setPlatform] = useState('');
-
-	const categoriesArray = [
-		'mmorpg',
-		'shooter',
-		'strategy',
-		'moba',
-		'racing',
-		'sports',
-		'social',
-		'sandbox',
-		'open-world',
-		'survival',
-		'pvp',
-		'pve',
-		'pixel',
-		'voxel',
-		'zombie',
-		'turn-based',
-		'first-person',
-		'third-Person',
-		'top-down',
-		'tank',
-		'space',
-		'sailing',
-		'side-scroller',
-		'superhero',
-		'permadeath',
-		'card',
-		'battle-royale',
-		'mmo',
-		'mmofps',
-		'mmotps',
-		'3d',
-		'2d',
-		'anime',
-		'fantasy',
-		'sci-fi',
-		'fighting',
-		'action-rpg',
-		'action',
-		'military',
-		'martial-arts',
-		'flight',
-		'low-spec',
-		'tower-defense',
-		'horror',
-		'mmorts'
-	];
-
-	const sortArray = ['relevance', 'popularity', 'alphabetical', 'release-date'];
 
 	useEffect(() => {
 		const handleApplyFilters = () => {
@@ -110,7 +110,7 @@ export const SelectFilter = () => {
 					MenuProps={{
 						PaperProps: selectPaperStyles
 					}}
-					onChange={(e) => setCategory(e.target.value || '')}>
+					onChange={(e) => setCategory(e.target.value)}>
 					<MenuItem value=''>all genres</MenuItem>
 					{categoriesArray.map((c) => (
 						<MenuItem key={c} value={c}>
@@ -129,7 +129,7 @@ export const SelectFilter = () => {
 					MenuProps={{
 						PaperProps: selectPaperStyles
 					}}
-					onChange={(e) => setSortBy(e.target.value || '')}>
+					onChange={(e) => setSortBy(e.target.value)}>
 					{sortArray.map((s) => (
 						<MenuItem key={s} value={s}>
 							<Typography>{s}</Typography>
@@ -147,7 +147,7 @@ export const SelectFilter = () => {
 					MenuProps={{
 						PaperProps: selectPaperStyles
 					}}
-					onChange={(e) => setPlatform(e.target.value || '')}>
+					onChange={(e) => setPlatform(e.target.value)}>
 					<MenuItem value=''>
 						<Typography>all platforms</Typography>
 					</MenuItem>

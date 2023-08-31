@@ -1,42 +1,48 @@
 import axios from 'axios';
 import { gameSlice } from '../slices/gameSlice';
 
-const formatDate = (dateString) => {
-	const piece = dateString.split('-');
-	return `${piece[2]}.${piece[1]}.${piece[0]}`;
+const formatDate = (dateString) => dateString.split('-').reverse().join('.');
+
+const fetchGameData = async (id) => {
+	const url = `/api/game?id=${id}`;
+	const response = await axios.get(url);
+
+	return {
+		...response.data,
+		release_date: formatDate(response.data.release_date)
+	};
 };
 
-export const fetchOneGame = (id) => {
-	sessionStorage.removeItem(`game${id}`);
-
-	return async (dispatch) => {
-		const cachedGame = JSON.parse(sessionStorage.getItem(`game${id}`));
-
-		if (cachedGame && new Date().getTime() - cachedGame.timestamp <= 30 * 1000) {
-			dispatch(gameSlice.actions.fetchGameSuccess(cachedGame.data));
-			return;
-		}
-
+const fetchGameDataWithRetries = async (id, dispatch) => {
+	let retries = 3;
+	let error = null;
+	while (retries > 0) {
 		try {
-			dispatch(gameSlice.actions.fetching());
+			const game = await fetchGameData(id);
 
-			const url = `https://www.freetogame.com/api/game?id=${id}`;
-
-			const response = await axios.get(url);
-
-			const game = response.data;
-			game.release_date = formatDate(game.release_date);
-
-			console.log(game);
-
-			sessionStorage.setItem(`game${id}`, JSON.stringify({ data: game, timestamp: new Date().getTime() }));
+			sessionStorage.setItem(`game${id}`, JSON.stringify({ data: game, timestamp: Date.now() }));
 			dispatch(gameSlice.actions.fetchGameSuccess(game));
 
-			setTimeout(() => {
-				sessionStorage.removeItem(`game${id}`);
-			}, 30 * 1000);
-		} catch (error) {
-			dispatch(gameSlice.actions.fetchError(error));
+			setTimeout(() => sessionStorage.removeItem(`game${id}`), 5 * 60 * 1000);
+
+			return;
+		} catch (e) {
+			error = e;
+			retries--;
 		}
-	};
+	}
+	dispatch(gameSlice.actions.fetchError(error));
+};
+
+export const fetchOneGame = (id) => async (dispatch) => {
+	const cachedGame = JSON.parse(sessionStorage.getItem(`game${id}`));
+
+	if (cachedGame && Date.now() - cachedGame.timestamp <= 5 * 60 * 1000) {
+		dispatch(gameSlice.actions.fetchGameSuccess(cachedGame.data));
+		return;
+	}
+
+	dispatch(gameSlice.actions.fetching());
+
+	await fetchGameDataWithRetries(id, dispatch);
 };

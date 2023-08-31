@@ -4,6 +4,7 @@ import { CardItem } from '../components/CardItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchGames } from '../store/actions/gamesActions';
 import { Box, Grid, LinearProgress, Pagination, Typography } from '@mui/material';
+import { cancelPreviousRequests } from '../store/slices/cancelRequestsSlice';
 
 export function MainPage() {
 	const dispatch = useDispatch();
@@ -17,6 +18,7 @@ export function MainPage() {
 	const displayedGames = games.slice(startIndex, endIndex);
 
 	useEffect(() => {
+		dispatch(cancelPreviousRequests());
 		dispatch(fetchGames());
 	}, [dispatch]);
 
