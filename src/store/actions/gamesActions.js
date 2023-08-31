@@ -13,7 +13,6 @@ const fetchGamesData = async (url) => {
 		release_date: formatDate(game.release_date)
 	}));
 	cachedGames = games;
-	console.log(games);
 	return games;
 };
 
